@@ -1,0 +1,12 @@
+body {
+    background-color: #07031A !important;
+    color : #ffff !important;
+}
+
+.list-header {
+    padding: 15px 0px;
+}
+
+.movie-search {
+    width: 200px !important;
+}
