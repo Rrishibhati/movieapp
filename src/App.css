@@ -41,6 +41,17 @@ body {
 .poster-footer {
     position: relative;
     top: -40px;
+    opacity: 0;
+}
+
+.movie-poster:hover + .poster-footer {
+    opacity: 1;
+    transition : 0.6s ease;
+}
+
+.poster-footer:hover {
+    opacity: 1;
+    transition : 0.6s ease;
 }
 
 button.add-to-fav {
