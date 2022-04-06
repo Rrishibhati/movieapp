@@ -14,6 +14,8 @@ function App() {
 
   useEffect(() => {
     fetchMovies(url + '&s=avengers');
+    const favList = JSON.parse(localStorage.getItem('favourite_list'));
+    !!favList && setFav(favList);
   }, [])
 
   const handleSearch = async (e) => {
@@ -34,8 +36,26 @@ function App() {
     setMovies(responseJson.Search);
   }
 
-  const addToFav = (item) => {
-    !!item && setFav([...favourites, item]);
+  const addToFav = async (item) => {
+    await !!item && setFav([...favourites, item]);
+    await localStorage.setItem('favourite_list', JSON.stringify([...favourites, item]));
+  }
+
+  const removeToFav = (item) => {
+
+    const index = favourites.findIndex((movie) => {
+      return (movie.imdbID === item.imdbID);
+    });
+
+    if (index === -1) {
+      alert('Movie not found in favourite list');
+      return;
+    }
+
+    const newFav = favourites;
+    newFav.splice(index, 1);
+    setFav([...newFav]);
+    localStorage.setItem('favourite_list', JSON.stringify([...newFav]));
   }
 
   return (
@@ -47,13 +67,20 @@ function App() {
       <div className="d-flex flex-wrap-nowrap movie-list-container">
         <MovieList movies={movies} addToFav={addToFav} />
       </div>
-
-      <div className="list-header d-flex align-items-center justify-content-between">
-        <Heading title="Favourites List" />
-      </div>
-      <div className="d-flex flex-wrap-nowrap fav-list-container">
-        <FavList movies={favourites} addToFav={addToFav} />
-      </div>
+      { favourites && favourites.length > 0  
+          ? (
+            <>
+              <div className="list-header d-flex align-items-center justify-content-between">
+                <Heading title="Favourites List" />
+              </div>
+              <div className="d-flex flex-wrap-nowrap fav-list-container">
+                <FavList movies={favourites} removeToFav={removeToFav} />
+              </div>
+            </>
+          )
+          : ( <></> )
+      }
+      
     </div>
   );
 }
